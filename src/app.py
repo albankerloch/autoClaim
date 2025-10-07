@@ -1,4 +1,6 @@
 import streamlit as st 
+import json
+import os
 
 # title of the app
 st.title("Déclaration de sinistre Automobile")
@@ -15,15 +17,22 @@ location = st.text_input("Lieu de l'accident")
 description = st.text_area("Description de l'accident")
 vehicle_damage = st.selectbox("Dommages au véhicule", ["Léger", "Modéré", "Grave"])
 injuries = st.selectbox("Blessures", ["Aucune", "Légères", "Graves"])
-police_report = st.checkbox("Constat réalisé")
+accident_report = st.checkbox("Constat réalisé")
 
 # button to submit the claim
 if st.button("Soumettre la déclaration"):
     st.success("Votre déclaration de sinistre a été soumise avec succès!")
-    st.write("Détails du sinistre:")
-    st.write(f"Date de l'accident: {date_of_accident}")
-    st.write(f"Lieu de l'accident: {location}")
-    st.write(f"Description: {description}")
-    st.write(f"Dommages au véhicule: {vehicle_damage}")
-    st.write(f"Blessures: {injuries}")
-    st.write(f"Constat réalisé: {'Oui' if police_report else 'Non'}")
+    claim_details = {
+        "date_of_accident": str(date_of_accident),
+        "location": location,   
+        "description": description,
+        "vehicle_damage": vehicle_damage,
+        "injuries": injuries,
+        "police_report": accident_report
+    }
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    output_path = os.path.join(script_dir, "..", "data", "output", "claim_details.json")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)    
+    with open(output_path, "w") as f:
+        json.dump(claim_details, f)
+    st.info("Les détails de votre sinistre ont été enregistrés dans 'claim_details.json'.")
