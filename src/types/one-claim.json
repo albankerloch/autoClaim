@@ -17,7 +17,7 @@
         "injuries": {
             "enum": ["Aucune", "Légères", "Graves"] 
         },
-        "accident_report": {
+        "constat_accident": {
             "enum": ["Oui", "Non"]
         }
     },

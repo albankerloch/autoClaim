@@ -7,58 +7,82 @@ INPUT = "bonjour j'ai eu un accident de voiture aujourd'hui on m'est rentré ded
 
 @dataclass
 class State:
-	input: str
-	description: str
-	date_of_accident: str
-	location: str
-	vehicle_damage: str
-	injuries: str
-	accident_report: str
-	complete: str
+    input: str
+    description: str
+    date_of_accident: str
+    location: str
+    vehicle_damage: str
+    injuries: str
+    constat_accident: str
+    complete: str
 
 def extract_data(state: State) -> State:
-	print("Étape : Extraction des données")
-	input_user = input("Entrez votre nom : ")
-	state.input = input_user
-	with open("src/types/one-claim.json", "r", encoding="utf-8") as f:
-		json_schema = json.load(f)
-	response, usage = call_chat_llm("You are a helpful assistant.", f"Here is an audio transcription. Extract the car claim insurance from the following input: {state.input}", json_schema, model="google/gemini-2.5-flash", temperature=0.0)
-	state.description = response.get("description", "")
-	state.date_of_accident = response.get("date_of_accident", "")
-	state.location = response.get("location", "")
-	state.vehicle_damage = response.get("vehicle_damage", "")
-	state.injuries = response.get("injuries", "")
-	state.accident_report = response.get("accident_report", "")
-	return state
+    print("Étape : Extraction des données")
+    input_user = input("Décrivez les circonstances de l'accident : ")
+    state.input = input_user
+    with open("src/types/one-claim.json", "r", encoding="utf-8") as f:
+        json_schema = json.load(f)
+    response, usage = call_chat_llm("You are a helpful assistant.", f"Here is an audio transcription. Extract the car claim insurance from the following input: {state.input}", json_schema, model="google/gemini-2.5-flash", temperature=0.0)
+    if state.description == "" and response.get("description", "") is not None:
+        state.description = response.get("description", "")
+        print("Description mise à jour :", state.description)
+    if state.date_of_accident == "" and response.get("date_of_accident", "") is not None:
+        state.date_of_accident = response.get("date_of_accident", "")
+        print("Date de l'accident mise à jour :", state.date_of_accident)
+    if state.location == "" and response.get("location", "") is not None:
+        state.location = response.get("location", "")
+        print("Lieu de l'accident mis à jour :", state.location)
+    if state.vehicle_damage == "" and response.get("vehicle_damage", "") is not None:
+        state.vehicle_damage = response.get("vehicle_damage", "")
+        print("Dommages au véhicule mis à jour :", state.vehicle_damage)
+    if state.injuries == "" and response.get("injuries", "") is not None:
+        state.injuries = response.get("injuries", "")
+        print("Blessures mises à jour :", state.injuries)
+    if state.constat_accident == "" and response.get("constat_accident", "") is not None:
+        state.constat_accident = response.get("constat_accident", "")
+        print("Rapport d'accident mis à jour :", state.constat_accident)
+    return state
 
 def check_completeness(state: State) -> State:
-	print("Étape : Vérification des données")
-	if state.description and state.date_of_accident and state.location and state.vehicle_damage and state.injuries and state.accident_report:
-		state.complete = True
-	return state
+    print("Étape : Vérification des données")
+    if state.description == "":
+        print("La description est manquante.")
+    if state.date_of_accident == "":
+        print("La date de l'accident est manquante.")
+    if state.location == "":
+        print("Le lieu de l'accident est manquant.")
+    if state.vehicle_damage == "":
+        print("Les dommages au véhicule sont manquants.")
+    if state.injuries == "":
+        print("Les informations sur les blessures sont manquantes.")
+    if state.constat_accident == "":
+        print("Le constat d'accident est manquant.")
+    if state.description and state.date_of_accident and state.location and state.vehicle_damage and state.injuries and state.constat_accident:
+        state.complete = True
+    return state
 
 def decide(state):
-	return END if state.complete else "extraction"
+    return END if state.complete else "extraction"
 
 if __name__ == "__main__":
-	
-	workflow = StateGraph(State)
-	workflow.add_node("extraction", extract_data)
-	workflow.add_node("verification", check_completeness)
-	workflow.set_entry_point("extraction")
-	workflow.add_edge("extraction", "verification")
-	workflow.add_conditional_edges("verification", decide)
-	graph = workflow.compile()
+    
+    workflow = StateGraph(State)
+    workflow.add_node("extraction", extract_data)
+    workflow.add_node("verification", check_completeness)
+    workflow.set_entry_point("extraction")
+    workflow.add_edge("extraction", "verification")
+    workflow.add_conditional_edges("verification", decide)
+    graph = workflow.compile()
 
-	etat_initial = State(
-		input="",
-		description="",
-		date_of_accident="",
-		location="",
-		vehicle_damage="",
-		injuries="",
-		accident_report="",
-		complete=False
-	)
-	result = graph.invoke(etat_initial)
-	print("✔️ Données validées, workflow terminé")
+    etat_initial = State(
+        input="",
+        description="",
+        date_of_accident="",
+        location="",
+        vehicle_damage="",
+        injuries="",
+        constat_accident="",
+        complete=False
+    )
+    result = graph.invoke(etat_initial)
+    print("✔️ Données validées, workflow terminé")

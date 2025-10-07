@@ -15,7 +15,7 @@ class State:
 	location: str
 	vehicle_damage: str
 	injuries: str
-	accident_report: str
+	constat_accident: str
 	complete: str
 	
 def extract_data(state: State) -> State:
@@ -28,12 +28,12 @@ def extract_data(state: State) -> State:
 	state.location = response.get("location", "")
 	state.vehicle_damage = response.get("vehicle_damage", "")
 	state.injuries = response.get("injuries", "")
-	state.accident_report = response.get("accident_report", "")
+	state.constat_accident = response.get("constat_accident", "")
 	return state
 
 def check_completeness(state: State) -> State:
 	print("📝 Étape : Vérification des données")
-	if state.description and state.date_of_accident and state.location and state.vehicle_damage and state.injuries and state.accident_report:
+	if state.description and state.date_of_accident and state.location and state.vehicle_damage and state.injuries and state.constat_accident:
 		state.complete = True
 	return state
 
@@ -86,7 +86,7 @@ if uploaded_file is not None:
                 location="",
                 vehicle_damage="",
                 injuries="",
-                accident_report="",
+                constat_accident="",
                 complete=False
             )
             result = graph.invoke(etat_initial)
