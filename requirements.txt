@@ -2,3 +2,6 @@ streamlit
 dotenv
 faster_whisper
 requests
+langchain_core
+langgraph
+langchain_openai
