@@ -7,6 +7,7 @@ INPUT = "bonjour j'ai eu un accident de voiture aujourd'hui on m'est rentré ded
 
 @dataclass
 class State:
+	input: str
 	description: str
 	date_of_accident: str
 	location: str
@@ -17,6 +18,8 @@ class State:
 
 def extract_data(state: State) -> State:
 	print("Étape : Extraction des données")
+	input_user = input("Entrez votre nom : ")
+	state.input = input_user
 	with open("src/types/one-claim.json", "r", encoding="utf-8") as f:
 		json_schema = json.load(f)
 	response, usage = call_chat_llm("You are a helpful assistant.", f"Here is an audio transcription. Extract the car claim insurance from the following input: {state.input}", json_schema, model="google/gemini-2.5-flash", temperature=0.0)
@@ -48,7 +51,7 @@ if __name__ == "__main__":
 	graph = workflow.compile()
 
 	etat_initial = State(
-		input=INPUT,
+		input="",
 		description="",
 		date_of_accident="",
 		location="",
