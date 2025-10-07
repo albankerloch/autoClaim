@@ -1,0 +1,28 @@
+{
+    "type": "object",
+    "properties": {
+        "date_of_accident": {
+            "type": "string",
+            "format": "date"
+        },
+        "location": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "vehicle_damage": {
+            "enum": ["Léger", "Modéré", "Grave"]
+        },
+        "injuries": {
+            "enum": ["Aucune", "Légères", "Graves"] 
+        },
+        "accident_report": {
+            "enum": ["Oui", "Non"]
+        }
+    },
+    "required": [
+        "description"
+    ],
+    "additionalProperties": false
+}

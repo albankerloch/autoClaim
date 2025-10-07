@@ -1,6 +1,7 @@
 import streamlit as st 
 import json
 import os
+from llm_chat import call_chat_llm
 
 # title of the app
 st.title("Déclaration de sinistre Automobile")
@@ -36,3 +37,8 @@ if st.button("Soumettre la déclaration"):
     with open(output_path, "w") as f:
         json.dump(claim_details, f)
     st.info("Les détails de votre sinistre ont été enregistrés dans 'claim_details.json'.")
+    with open("src/types/one-claim.json", "r", encoding="utf-8") as f:
+        json_schema = json.load(f)
+    response, usage = call_chat_llm("You are a helpful assistant.", f"Here is the CV of a consultant. Extract the car claim insurance from the following input: {claim_details}", json_schema, model="google/gemini-2.5-flash", temperature=0.0)
+    st.write(json.dumps(response, indent=2, ensure_ascii=False))
+	
