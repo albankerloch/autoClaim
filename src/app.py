@@ -62,7 +62,7 @@ if uploaded_file is not None:
     if st.button("Soumettre la déclaration"):
         with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp_file:
             tmp_file.write(uploaded_file.getvalue())
-            tmp_file.flush()        
+            tmp_file.flush()
             model = WhisperModel("small", device="cpu", compute_type="int8")
             segments, info = model.transcribe(tmp_file.name)
             text = " ".join([segment.text for segment in segments])        
