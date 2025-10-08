@@ -1,22 +1,32 @@
 import streamlit as st
-from openai import OpenAI
-from dotenv import load_dotenv
-import os
+from agent import launch_agent
+from dataclasses import dataclass
 
-load_dotenv()
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
-if not OPENROUTER_API_KEY:
-    raise ValueError("Missing OPENROUTER_API_KEY")
+@dataclass
+class State:
+    input: str
+    date_accident: str
+    ville_accident: str
+    degats_vehicule: str
+    constat_realise: str
+    complete: str
+    answer: str
+
+if "claim_data" not in st.session_state:
+    st.session_state["claim_data"] = {
+        "input": "",
+        "date_accident": "",
+        "ville_accident": "",
+        "degats_vehicule": "",
+        "constat_realise": "",
+        "complete": False,
+        "answer": ""
+    }
 
 # --- Configuration ---
 st.set_page_config(page_title="Assurance Chat", page_icon="💬")
-st.title("💬 Agent de Déclaration de Sinistre")
+st.title("Déclaration de Sinistre")
 
-# --- Initialisation du client OpenRouter ou OpenAI ---
-client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=OPENROUTER_API_KEY
-)
 
 # --- Historique de conversation ---
 if "messages" not in st.session_state:
@@ -36,15 +46,20 @@ if prompt := st.chat_input("Votre message..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Appel du modèle via OpenRouter
+    # Appel de l'agent et affichage de la réponse
     with st.chat_message("assistant"):
         with st.spinner("Rédaction de la réponse..."):
-            response = client.chat.completions.create(
-                model="openai/gpt-4o-mini",
-                messages=st.session_state.messages,
-            )
-            reply = response.choices[0].message.content
-            st.markdown(reply)
+            print("Prompt utilisateur :", prompt)
+            claim = st.session_state.get("claim_data", {})
+            print("Données du sinistre avant l'agent :", claim)
+            print(type(claim))
+            claim["input"] = prompt
+            claim["answer"] = ""
+            print("Données du sinistre juste avant l'agent :", claim)
+            response = launch_agent(claim)
+            st.session_state["claim_data"] = response
+            st.markdown(response['answer'])
+            print("Réponse de l'agent :", st.session_state.get("claim_data", {}))
 
     # Ajouter la réponse dans l’historique
-    st.session_state.messages.append({"role": "assistant", "content": reply})
+    st.session_state.messages.append({"role": "assistant", "content": response.get('answer')})

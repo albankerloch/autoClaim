@@ -8,43 +8,59 @@ INPUT = "bonjour j'ai eu un accident de voiture aujourd'hui on m'est rentré ded
 @dataclass
 class State:
     input: str
-    description: str
-    date_of_accident: str
-    location: str
-    vehicle_damage: str
-    injuries: str
-    constat_accident: str
+    date_accident: str
+    ville_accident: str
+    degats_vehicule: str
+    constat_realise: str
     complete: str
+    answer: str
 
 def extract_data(state: State) -> State:
     print("Étape : Extraction des données")
     with open("src/types/one-claim.json", "r", encoding="utf-8") as f:
         json_schema = json.load(f)
+    print("État du state :", state)
     response, usage = call_chat_llm("You are a helpful assistant.", f"Here is an audio transcription. Extract the car claim insurance from the following input: {state.input}", json_schema, model="google/gemini-2.5-flash", temperature=0.0)
-    if state.description == "" and response.get("description", "") is not None:
-        state.description = response.get("description", "")
-    if state.date_of_accident == "" and response.get("date_of_accident", "") is not None:
-        state.date_of_accident = response.get("date_of_accident", "")
-    if state.location == "" and response.get("location", "") is not None:
-        state.location = response.get("location", "")
-    if state.vehicle_damage == "" and response.get("vehicle_damage", "") is not None:
-        state.vehicle_damage = response.get("vehicle_damage", "")
-    if state.injuries == "" and response.get("injuries", "") is not None:
-        state.injuries = response.get("injuries", "")
-    if state.constat_accident == "" and response.get("constat_accident", "") is not None:
-        state.constat_accident = response.get("constat_accident", "")
+    print("Réponse du LLM :", response)
+    update_fields = []
+    if state.date_accident == "" and response.get("date_accident", ""):
+        state.date_accident = response.get("date_accident", "")
+        update_fields.append("date de l'accident")
+    if state.ville_accident == "" and response.get("ville_accident", ""):
+        state.ville_accident = response.get("ville_accident", "")
+        update_fields.append("ville de l'accident")
+    if state.degats_vehicule == "" and response.get("degats_vehicule", ""):
+        state.degats_vehicule = response.get("degats_vehicule", "")
+        update_fields.append("dégâts du véhicule")
+    if state.constat_realise == "" and response.get("constat_realise", ""):
+        state.constat_realise = response.get("constat_realise", "")
+        update_fields.append("réalisation d'un constat")
+    if update_fields:
+        state.answer = state.answer + "J'ai mis à jour les informations suivantes : " + ", ".join(update_fields) + ". "
     return state
 
 def check_completeness(state: State) -> State:
     print("Étape : Vérification des données")
-    if state.description and state.date_of_accident and state.location and state.vehicle_damage and state.injuries and state.constat_accident:
+    if state.date_accident and state.ville_accident and state.degats_vehicule and state.constat_realise:
         state.complete = True
+        state.answer = state.answer + "Toutes les informations nécessaires ont été collectées avec succès."
+    else:
+        missing_elements = []
+        if not state.date_accident:
+            missing_elements.append("date de l'accident")
+        if not state.ville_accident:
+            missing_elements.append("ville de l'accident")
+        if not state.degats_vehicule:        
+            missing_elements.append("dégâts du véhicule")
+        if not state.constat_realise:
+            missing_elements.append("réalisation d'un constat")
+        state.answer = state.answer + "Pouvez-vous nous préciser les éléments suivants : " + ", ".join(missing_elements)
     return state
 
 def decide(state):
     return END if state.complete else "extraction"
 
-def launch_agent(input_string: str):
+def launch_agent(state: State) -> State:
     workflow = StateGraph(State)
     workflow.add_node("extraction", extract_data)
     workflow.add_node("verification", check_completeness)
@@ -52,21 +68,19 @@ def launch_agent(input_string: str):
     workflow.add_edge("extraction", "verification")
     # workflow.add_conditional_edges("verification", decide)
     graph = workflow.compile()
-
-    etat_initial = State(
-        input=input_string,
-        description="",
-        date_of_accident="",
-        location="",
-        vehicle_damage="",
-        injuries="",
-        constat_accident="",
-        complete=False
-    )
-    result = graph.invoke(etat_initial)
-    print("✔️ Données validées, workflow terminé")
-    print(result)
-    pass
+    result = graph.invoke(state)
+    print("✔️ Workflow terminé")
+    return result
 
 if __name__ == "__main__":
-    launch_agent(INPUT)
+    etat_initial = State(
+        input=INPUT,
+        date_accident="",
+        ville_accident="",
+        degats_vehicule="",
+        injuries="",
+        constat_realise="",
+        complete=False,
+        answer=""
+    )
+    print(launch_agent(etat_initial))
