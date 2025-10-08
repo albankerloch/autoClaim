@@ -1,0 +1,9 @@
+{
+    "type": "object",
+    "properties": {
+        "intent": {
+            "enum": ["information", "declaration"]
+        }
+    },
+    "additionalProperties": false
+}
