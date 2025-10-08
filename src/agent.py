@@ -36,7 +36,7 @@ def extract_data(state: State) -> State:
         state.constat_realise = response.get("constat_realise", "")
         update_fields.append("réalisation d'un constat")
     if update_fields:
-        state.answer = state.answer + "J'ai mis à jour les informations suivantes : " + ", ".join(update_fields) + ". "
+        state.answer = state.answer + "J'ai mis à jour les informations suivantes : " + ", ".join(update_fields) + ".\n"
     return state
 
 def check_completeness(state: State) -> State:
@@ -54,7 +54,7 @@ def check_completeness(state: State) -> State:
             missing_elements.append("dégâts du véhicule")
         if not state.constat_realise:
             missing_elements.append("réalisation d'un constat")
-        state.answer = state.answer + "Pouvez-vous nous préciser les éléments suivants : " + ", ".join(missing_elements)
+        state.answer = state.answer + "Merci de préciser les éléments suivants : " + ", ".join(missing_elements) + ".\n"
     return state
 
 def decide(state):
