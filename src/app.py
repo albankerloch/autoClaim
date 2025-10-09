@@ -3,6 +3,8 @@ from agent import launch_agent
 import tempfile
 from llm_transcribe import call_transcribe_llm
 import os
+from gtts import gTTS
+import io
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
@@ -30,6 +32,12 @@ st.title("Déclaration de Sinistre Automobile")
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
+        if msg["content"].strip():
+            tts = gTTS(msg["content"], lang="fr")
+            audio_fp = io.BytesIO()
+            tts.write_to_fp(audio_fp)
+            audio_fp.seek(0)
+            st.audio(audio_fp, format="audio/mp3")
 
 # Saisie par fichier vocal
 # uploaded_file = st.file_uploader("Ou envoyez un fichier audio", type=["mp3", "wav", "m4a"], key=st.session_state["file_key"])

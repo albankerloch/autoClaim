@@ -1,9 +1,7 @@
-import json
 import os
 from typing import Dict, Tuple
 import requests
 from dotenv import load_dotenv
-import json
 import base64
 
 load_dotenv()
