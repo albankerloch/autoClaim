@@ -6,6 +6,7 @@ import os
 from tts import gTTS
 import io
 
+
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "assistant", "content": "Bonjour, je suis votre assistant pour déclarer un sinistre. Décrivez moi votre besoin à l'oral."}
