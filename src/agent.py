@@ -45,7 +45,7 @@ def answer_question(state: State) -> State:
     print("Étape : Réponse à la question")
     with open("src/types/answer.json", "r", encoding="utf-8") as f:
         json_schema = json.load(f)
-    response, usage = call_chat_llm("You are a helpful assistant.", f"Here is an audio transcription of a customer who had a car accident. Answer him in french: {state.input}", json_schema, model="google/gemini-2.5-flash", temperature=0.0)
+    response, usage = call_chat_llm("You are a helpful assistant.", f"Here is an audio transcription of a customer who had a car accident. Answer him in french in a concise way: {state.input}", json_schema, model="google/gemini-2.5-flash", temperature=0.0)
     state.answer = response.get("answer", "")
     print(f"Réponse apportée : {state.answer}")
     return state

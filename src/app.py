@@ -55,7 +55,7 @@ for msg in st.session_state.messages:
 
 uploaded_file = st.audio_input("Décrivez votre problème (demande d'information ou déclaration de sinistre)", key=st.session_state["file_key"])
 if uploaded_file is not None:
-    if st.button("Transcrire et envoyer", key="voice_send"):
+    if st.button("Envoyer", key="voice_send"):
         with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp_file:
             tmp_file.write(uploaded_file.getvalue())
             tmp_file.flush()

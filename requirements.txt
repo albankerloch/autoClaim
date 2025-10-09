@@ -5,5 +5,7 @@ requests
 langchain_core
 langgraph
 langchain_openai
-gTTS
 elevenlabs
+trulens_eval
+openai
+trulens-providers-openai
