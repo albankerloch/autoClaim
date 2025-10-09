@@ -3,7 +3,6 @@ from agent import launch_agent
 import tempfile
 from llm_transcribe import call_transcribe_llm
 import os
-from gtts import gTTS
 import io
 from elevenlabs.client import ElevenLabs
 from dotenv import load_dotenv
