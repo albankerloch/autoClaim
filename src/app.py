@@ -8,7 +8,7 @@ import io
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Bonjour, je suis votre assistant pour déclarer un sinistre. Décrivez l'accident avec un fichier audio."}
+        {"role": "assistant", "content": "Bonjour, je suis votre assistant pour déclarer un sinistre. Décrivez moi votre besoin à l'oral."}
     ]
 
 if "file_key" not in st.session_state:
@@ -39,12 +39,8 @@ for msg in st.session_state.messages:
             audio_fp.seek(0)
             st.audio(audio_fp, format="audio/mp3")
 
-# Saisie par fichier vocal
-# uploaded_file = st.file_uploader("Ou envoyez un fichier audio", type=["mp3", "wav", "m4a"], key=st.session_state["file_key"])
-# Saisie vocale directe 
 uploaded_file = st.audio_input("Décrivez votre problème (demande d'information ou déclaration de sinistre)", key=st.session_state["file_key"])
 if uploaded_file is not None:
-    # st.audio(uploaded_file, format="audio/mp3")
     if st.button("Transcrire et envoyer", key="voice_send"):
         with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp_file:
             tmp_file.write(uploaded_file.getvalue())
