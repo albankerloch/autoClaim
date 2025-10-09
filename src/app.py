@@ -37,7 +37,7 @@ for msg in st.session_state.messages:
             audio_fp = io.BytesIO()
             tts.write_to_fp(audio_fp)
             audio_fp.seek(0)
-            st.audio(audio_fp, format="audio/mp3")
+            st.audio(audio_fp, format="audio/mpeg")
 
 uploaded_file = st.audio_input("Décrivez votre problème (demande d'information ou déclaration de sinistre)", key=st.session_state["file_key"])
 if uploaded_file is not None:
