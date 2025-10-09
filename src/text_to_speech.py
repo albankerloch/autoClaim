@@ -11,10 +11,7 @@ if not EVENTLABS_API_KEY:
     raise ValueError("Missing EVENTLABS_API_KEY")
 
 
-client = ElevenLabs(
-    api_key=EVENTLABS_API_KEY,
-    # éventuellement base_url si besoin selon region
-)
+client = ElevenLabs(api_key=EVENTLABS_API_KEY)
 
 st.title("🎙️ Text-to-Speech avec Evenlabs")
 
