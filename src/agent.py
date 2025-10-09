@@ -13,7 +13,7 @@ if not GMAIL_APP_PASSWORD:
     raise ValueError("Missing GMAIL_APP_PASSWORD")
 
 
-INPUT = "bonjour j'ai eu un accident de voiture aujourd'hui on m'est rentré dedans par derrière un feu rouge? Je veux déclarer mon accident auprès d'axa : c'était à origac et j'ai des blessures légères pas de problème avec le véhicule et je n'ai pas fait de constat"
+INPUT = "bonjour j'ai eu un accident de voiture aujourd'hui on m'est rentré dedans par derrière un feu rouge. Je veux déclarer mon accident auprès d'axa : c'était à origac et j'ai des blessures légères pas de problème avec le véhicule et je n'ai pas fait de constat"
 INPUT_INFO = "bonjour j'ai eu un accident de voiture et je ne sais pas quoi faire"
 
 
@@ -32,7 +32,7 @@ def detect_intent(state: State) -> State:
     print("Étape : Détection de l'intention")
     with open("src/types/intent.json", "r", encoding="utf-8") as f:
         json_schema = json.load(f)
-    if not state.intent:
+    if state.intent != "declaration":
         response, usage = call_chat_llm("You are a helpful assistant.", f"Here is an audio transcription of a customer who had a car accident. Detect if the customer want information about what to do or if he wants to want to declare a claim: {state.input}", json_schema, model="google/gemini-2.5-flash", temperature=0.0)
         state.intent = response.get("intent", "")
         print(f"Intention détectée : {state.intent}")
@@ -92,7 +92,7 @@ def check_completeness(state: State) -> State:
 
 def send_email(state: State) -> State:
     print("Étape : Envoi de l'email")
-    recipient = "alban.kerloch@exalt-value.com"
+    recipient = "alban.kerloch@gmail.com"
     subject = "Détails du sinistre automobile"
     body = f"Détails du sinistre :\n\n{state.answer}"
     msg = MIMEText(body)
@@ -111,9 +111,12 @@ def send_email(state: State) -> State:
             server.starttls()
             server.login(smtp_user, smtp_password)
             server.sendmail(msg["From"], [recipient], msg.as_string())
-        state.answer = state.answer + "\nUn email de confirmation a été envoyé à alban.kerloch@exalt-value.com avec les détails du sinistre."
+        state.answer = state.answer + "\nUn email de confirmation a été envoyé à alban.kerloch@gmail.com avec les détails du sinistre."
     except Exception as e:
         state.answer = state.answer + f"\nErreur lors de l'envoi de l'email : {e}"
+
+    state.intent = "information"
+
     return state
 
 def decide(state):

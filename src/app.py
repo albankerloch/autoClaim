@@ -1,7 +1,7 @@
 import streamlit as st
 from agent import launch_agent
 import tempfile
-from faster_whisper import WhisperModel
+from llm_transcribe import call_transcribe_llm
 import os
 
 if "messages" not in st.session_state:
@@ -32,18 +32,16 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # Saisie par fichier vocal
-uploaded_file = st.file_uploader("Ou envoyez un fichier audio", type=["mp3", "wav", "m4a"], key=st.session_state["file_key"])
+# uploaded_file = st.file_uploader("Ou envoyez un fichier audio", type=["mp3", "wav", "m4a"], key=st.session_state["file_key"])
 # Saisie vocale directe 
-# uploaded_file = st.audio_input("Record your answer", key=st.session_state["file_key"])
+uploaded_file = st.audio_input("Décrivez votre problème (demande d'information ou déclaration de sinistre)", key=st.session_state["file_key"])
 if uploaded_file is not None:
-    st.audio(uploaded_file, format="audio/mp3")
+    # st.audio(uploaded_file, format="audio/mp3")
     if st.button("Transcrire et envoyer", key="voice_send"):
         with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp_file:
             tmp_file.write(uploaded_file.getvalue())
             tmp_file.flush()
-            model = WhisperModel("small", device="cpu", compute_type="int8")
-            segments, info = model.transcribe(tmp_file.name)
-            prompt = " ".join([segment.text for segment in segments])
+            prompt = call_transcribe_llm(tmp_file.name)
             os.unlink(tmp_file.name)
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.session_state["claim_data"]["input"] = prompt
