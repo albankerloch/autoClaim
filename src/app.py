@@ -3,7 +3,7 @@ from agent import launch_agent
 import tempfile
 from llm_transcribe import call_transcribe_llm
 import os
-from gtts import gTTS
+from tts import gTTS
 import io
 
 if "messages" not in st.session_state:
@@ -19,7 +19,7 @@ if "claim_data" not in st.session_state:
         "input": "",
         "date_accident": "",
         "ville_accident": "",
-        "degats_vehicule": "",
+        "degats_voiture": "",
         "constat_realise": "",
         "complete": False,
         "answer": ""

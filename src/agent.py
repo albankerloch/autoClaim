@@ -22,7 +22,7 @@ class State:
     input: str
     date_accident: str
     ville_accident: str
-    degats_vehicule: str
+    degats_voiture: str
     constat_realise: str
     complete: str
     answer: str
@@ -62,8 +62,8 @@ def extract_data(state: State) -> State:
     if state.ville_accident == "" and response.get("ville_accident", ""):
         state.ville_accident = response.get("ville_accident", "")
         update_fields.append("ville de l'accident")
-    if state.degats_vehicule == "" and response.get("degats_vehicule", ""):
-        state.degats_vehicule = response.get("degats_vehicule", "")
+    if state.degats_voiture == "" and response.get("degats_voiture", ""):
+        state.degats_voiture = response.get("degats_voiture", "")
         update_fields.append("dégâts du véhicule")
     if state.constat_realise == "" and response.get("constat_realise", ""):
         state.constat_realise = response.get("constat_realise", "")
@@ -74,7 +74,7 @@ def extract_data(state: State) -> State:
 
 def check_completeness(state: State) -> State:
     print("Étape : Vérification des données")
-    if state.date_accident and state.ville_accident and state.degats_vehicule and state.constat_realise:
+    if state.date_accident and state.ville_accident and state.degats_voiture and state.constat_realise:
         state.complete = True
         state.answer = state.answer + "Toutes les informations nécessaires ont été collectées avec succès."
     else:
@@ -83,7 +83,7 @@ def check_completeness(state: State) -> State:
             missing_elements.append("date de l'accident")
         if not state.ville_accident:
             missing_elements.append("ville de l'accident")
-        if not state.degats_vehicule:        
+        if not state.degats_voiture:        
             missing_elements.append("dégâts du véhicule")
         if not state.constat_realise:
             missing_elements.append("réalisation d'un constat")
@@ -94,7 +94,12 @@ def send_email(state: State) -> State:
     print("Étape : Envoi de l'email")
     recipient = "alban.kerloch@gmail.com"
     subject = "Détails du sinistre automobile"
-    body = f"Détails du sinistre :\n\n{state.answer}"
+    body = f"Détails du sinistre :\n\n"
+    body += f"Date de l'accident : {state.date_accident}\n"
+    body += f"Ville de l'accident : {state.ville_accident}\n"
+    body += f"Dégâts du véhicule : {state.degats_voiture}\n"
+    body += f"Constat réalisé : {'Oui' if state.constat_realise else 'Non'}\n"
+    body += f"\n\nMerci de traiter cette déclaration de sinistre. Cordialement. AutoClaim Bot"
     msg = MIMEText(body)
     msg["Subject"] = subject
     msg["From"] = "no-reply@autoClaim.com"
@@ -146,7 +151,7 @@ if __name__ == "__main__":
         input=INPUT,
         date_accident="",
         ville_accident="",
-        degats_vehicule="",
+        degats_voiture="",
         constat_realise="",
         complete=False,
         answer=""

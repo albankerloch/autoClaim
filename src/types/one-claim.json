@@ -8,7 +8,7 @@
         "ville_accident": {
             "type": "string"
         },
-        "degats_vehicule": {
+        "degats_voiture": {
             "enum": ["Léger", "Modéré", "Grave"]
         },
         "constat_realise": {

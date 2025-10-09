@@ -1,5 +1,5 @@
 import streamlit as st
-from gtts import gTTS
+from tts import gTTS
 import io
 
 st.title("🎙️ Text-to-Speech avec gTTS (gratuit)")
