@@ -1,7 +1,14 @@
 import streamlit as st
 from elevenlabs import set_api_key, generate, save
+import os
+from dotenv import load_dotenv
 
-set_api_key("sk_82fc19b9dd1c51bc01b5325a59c719cca11c694ae7e8b3b6") 
+load_dotenv()
+EVENTLABS_API_KEY = os.environ.get("EVENTLABS_API_KEY")
+if not EVENTLABS_API_KEY:
+    raise ValueError("Missing EVENTLABS_API_KEY")
+
+set_api_key(EVENTLABS_API_KEY)
 
 st.title("🎙️ Text-to-Speech avec Evenlabs")
 
