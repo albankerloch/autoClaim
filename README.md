@@ -23,17 +23,15 @@
 
 ### Architecture Actuelle
 
-![Diagramme d'architecture](doc/achi-actuelle.png)
+![Diagramme d'architecture](doc/archi-actuelle.png)
 
 ### Architecture Cible
 
 | Vue | Description |
 |---:|---|
-| ![Vue 1](doc/achi-n8n.png) | Agent N8N |
-| ![Vue 2](doc/achi-mcp.png) | Seveur MCP N8N |
+| ![Vue 1](doc/archi-n8n.png) | Agent N8N |
+| ![Vue 2](doc/archi-mcp.png) | Seveur MCP N8N |
 
-4. Pour contrôler la taille ou ajouter des attributs, utilisez HTML :
-<img src="doc/diagram.png" alt="Diagramme" width="600"/>
 
 5. Remarques :
 - Évitez les espaces dans les noms de fichiers (préférez `screenshot-1.png`), ou encodez-les (`%20`).
