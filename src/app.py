@@ -30,7 +30,8 @@ if "claim_data" not in st.session_state:
         "degats_voiture": "",
         "constat_realise": "",
         "complete": False,
-        "answer": ""
+        "answer": "",
+        "intent": ""
     }
 
 st.set_page_config(page_title="Assurance Chat", page_icon="💬")

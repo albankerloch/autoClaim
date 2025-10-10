@@ -123,8 +123,7 @@ def call_chat_llm(
         ))
         conn.commit()
         conn.close()
-        print(f"✅ Appel LLM enregistré")
     except Exception as e:
-        print(f"⚠️ Erreur logging: {e}")
+        print(f"Erreur logging: {e}")
 
     return json_response, usage

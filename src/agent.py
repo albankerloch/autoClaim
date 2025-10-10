@@ -154,8 +154,8 @@ if __name__ == "__main__":
         degats_voiture="",
         constat_realise="",
         complete=False,
-        answer=""
-        # intent est initialisé à ""
+        answer="",
+        intent=""
     )
     result = launch_agent(etat_initial)
     print(result["answer"])
