@@ -1,4 +1,4 @@
-# AXA Assistant
+# AutoClaim, an AXA Assistant
 
 <p>
   <a href="LICENSE">
