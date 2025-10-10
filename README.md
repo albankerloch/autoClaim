@@ -1,4 +1,10 @@
-# evaluation of DC generated
+# AXA Assistant
+
+<p>
+  <a href="LICENSE">
+    <img alt="Licence MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"/>
+  </a>
+</p>
 
 ## Launch the app
 
@@ -27,17 +33,13 @@
 
 ### Architecture Cible
 
-| Vue | Description |
+| Description | Vue  |
 |---:|---|
-| ![Vue 1](doc/archi-n8n.png) | Agent N8N |
-| ![Vue 2](doc/archi-mcp.png) | Seveur MCP N8N |
+| Agent N8N | ![Vue 1](doc/archi-n8n.png) |
+| Seveur MCP N8N | ![Vue 2](doc/archi-mcp.png) |
 
-
-5. Remarques :
-- Évitez les espaces dans les noms de fichiers (préférez `screenshot-1.png`), ou encodez-les (`%20`).
-- Les chemins relatifs fonctionnent sur GitHub et dans la plupart des visualiseurs Markdown : `doc/mon_image.png`.
-- Optimisez la taille des images pour un rendu rapide.
 
 ## Licence
 
-- MIT License (Open source)
+- MIT License (Open source) — voir le fichier [LICENSE](LICENSE)
+
