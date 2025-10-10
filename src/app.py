@@ -38,14 +38,14 @@ st.set_page_config(page_title="Assurance Chat", page_icon="💬")
 st.title("Déclaration de Sinistre Automobile")
 
 # Affichage du chat
-for msg in st.session_state.messages:
+for i, msg in enumerate(st.session_state.messages):
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
-        if msg["content"].strip():
+        if msg["content"].strip() and i == len(st.session_state.messages) - 1 and msg["role"] == "assistant":
             audio = client.text_to_speech.convert(
                 text=msg["content"],
                 model_id="eleven_multilingual_v2",
-                voice_id="pmISDijbLDrzVXC8fEO0"  # Remplacez par une voix existante
+                voice_id="pmISDijbLDrzVXC8fEO0" 
             )
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as f:
                 for chunk in audio:
