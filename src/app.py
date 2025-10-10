@@ -35,7 +35,7 @@ if "claim_data" not in st.session_state:
     }
 
 st.set_page_config(page_title="Assurance Chat", page_icon="💬")
-st.title("Déclaration de Sinistre Automobile")
+st.title("Assistant AXA AutoClaim")
 
 # Affichage du chat
 for i, msg in enumerate(st.session_state.messages):
